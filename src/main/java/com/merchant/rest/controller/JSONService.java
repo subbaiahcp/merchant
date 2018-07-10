@@ -30,7 +30,7 @@ public class JSONService {
 	@POST
 	@Path("/oct")
 	@Consumes("application/json")
-	public Response createProductInJSON(Request request) {
+	public Response postMerchantApi(Request request) {
 		try{
 		return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
 				.entity(pushFundsTransactions(request)).build() ;
@@ -43,7 +43,7 @@ public class JSONService {
 	@POST
 	@Path("/validate/user")
 	@Consumes("application/json")
-	public Response createProductInJSON(User user) {
+	public Response checkUser(User user) {
 		Status status = new Status();
 		try{
 			if(Constants.VALID_USERS.contains(user.getUserName()) && Constants.USER_PASS_MAP.get(user.getUserName()) != null &&
