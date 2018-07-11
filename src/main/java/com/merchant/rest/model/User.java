@@ -1,5 +1,8 @@
 package com.merchant.rest.model;
 
+/**
+*@author subbaiah
+*/
 public class User {
 
 	String userName;

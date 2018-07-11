@@ -4,6 +4,9 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+*@author subbaiah
+*/
 public class BasicAuthHeaderGenerator {
 
     public static String getBasicAuthHeader() {

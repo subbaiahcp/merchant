@@ -1,5 +1,8 @@
 package com.merchant.rest.model;
 
+/**
+*@author subbaiah
+*/
 public class Status {
 
 	private String message;

@@ -1,10 +1,15 @@
 package com.merchant.rest.model;
 
+/**
+*@author subbaiah
+*/
 public class ResolveAndPayRequest {
 
 	private String alias;
 	private String businessApplicationId;
 	private String amount;
+	private String name;
+	
 
 	public String getAlias() {
 		return alias;
@@ -28,6 +33,14 @@ public class ResolveAndPayRequest {
 
 	public void setAmount(String amount) {
 		this.amount = amount;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

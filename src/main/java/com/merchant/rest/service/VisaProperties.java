@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+*@author subbaiah
+*/
 public class VisaProperties {
 
     static Properties properties;

@@ -1,5 +1,8 @@
 package com.merchant.rest.service;
 
+/**
+*@author subbaiah
+*/
 public enum Property {
 
     SHARED_SECRET("sharedSecret"),

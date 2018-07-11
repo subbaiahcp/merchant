@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+*@author subbaiah
+*/
 public class Constants {
     public static final List<String> VALID_USERS = Arrays.asList("visa", "bank", "test");
     public static final Map<String, String> USER_PASS_MAP = new HashMap<String, String>(){

@@ -1,9 +1,12 @@
 package com.merchant.rest.model;
 
+/**
+*@author subbaiah
+*/
 public class Request {
 
-	String pan;
-	String amount;
+	private String pan;
+	private String amount;
 
 	public String getPan() {
 		return pan;

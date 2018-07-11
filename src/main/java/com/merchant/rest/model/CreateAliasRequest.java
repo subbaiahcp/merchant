@@ -1,22 +1,25 @@
 package com.merchant.rest.model;
 
+/**
+*@author subbaiah
+*/
 public class CreateAliasRequest {
 
-	String guid;
-	String recipientFirstName;
-	String recipientMiddleName;
-	String recipientLastName;
-	String address1;
-	String address2;
-	String city;
-	String country;
-	String postalCode;
-	String consentDateTime;
-	String recipientPrimaryAccountNumber;
-	String issuerName;
-	String cardType;
-	String alias;
-	String aliasType;
+	private String guid;
+	private String recipientFirstName;
+	private String recipientMiddleName;
+	private String recipientLastName;
+	private String address1;
+	private String address2;
+	private String city;
+	private String country;
+	private String postalCode;
+	private String consentDateTime;
+	private String recipientPrimaryAccountNumber;
+	private String issuerName;
+	private String cardType;
+	private String alias;
+	private String aliasType;
 	
 	public String getGuid() {
 		return guid;

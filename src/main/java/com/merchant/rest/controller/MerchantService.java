@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -34,6 +35,10 @@ import com.merchant.rest.service.MethodTypes;
 import com.merchant.rest.service.VisaAPIClient;
 import com.merchant.rest.utils.Constants;
 
+
+/**
+*@author subbaiah
+*/
 @Path("/merchant")
 public class MerchantService {
 
@@ -42,6 +47,7 @@ public class MerchantService {
 	private Status status = new Status();
 	private ObjectMapper mapper = new ObjectMapper();
 	private static List<String> transcationIdentifiers = new ArrayList<String>();
+	private static Map<String,String> transcationIdNameMap = new HashMap<String,String>();
 
 	@POST
 	@Path("/oct")
@@ -107,6 +113,7 @@ public class MerchantService {
 			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
 			JSONObject object = (JSONObject) JSONValue.parse(response);
 			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
+			transcationIdNameMap.put(object.get("transactionIdentifier").toString(), request.getName());
 			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
 					.entity(response).build();
 		} catch (Exception ex) {
@@ -133,6 +140,7 @@ public class MerchantService {
 	                org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
 	                transactionQ.setTransactionIdentifier(jsonObject.optString("transactionIdentifier"));
 	                transactionQ.setAmount(jsonObject.optString("amount"));
+	                transactionQ.setName(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()));
 	            }
 				transactionQuery.add(transactionQ);
 			}
