@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -119,8 +118,6 @@ public class VisaAPIClient {
 		} else if (request instanceof HttpPut) {
 		    ((HttpPut) request).setEntity(new StringEntity(body, "UTF-8"));
 		}
-        
-        HttpHost host = new HttpHost(VisaProperties.getProperty(Property.END_POINT));
         CloseableHttpResponse response = fetchMutualAuthHttpClient().execute((HttpUriRequest) request);
         return logAndReturnResponse(response);
     }
