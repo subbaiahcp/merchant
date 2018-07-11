@@ -1,1 +1,1 @@
-web: java -jar target/merchant-enablement.war
+war:deploy target/merchant-enablement.war
