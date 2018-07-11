@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
@@ -164,6 +165,20 @@ public class MerchantService {
     }
 	
 	public void enrichCreateAliasRequest(CreateAliasRequest request) throws JsonProcessingException {
+		request.setAddress1("Street 1");
+		request.setAddress2("Region 1");
+		request.setAliasType("01");
+		request.setCardType("Visa Classic");
+		request.setCity("Nairobi");
+		request.setConsentDateTime("2018-03-01 01:02:03");
+		request.setCountry("KE");
+		request.setIssuerName("Test Bank 1");
+		request.setPostalCode("00111");
+		request.setRecipientFirstName("Jamie");
+		request.setRecipientMiddleName("M");
+		request.setRecipientLastName("Bakari");
+		request.setRecipientPrimaryAccountNumber("4895142232120006");
+		request.setGuid("574f4b6a4c2b704766306f300099515a789092348832455975343" + RandomStringUtils.randomAlphanumeric(10));
         this.visaAPIClient = new VisaAPIClient();
         this.request = mapper.writeValueAsString(request);
     }
