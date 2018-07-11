@@ -104,8 +104,11 @@ public class MerchantService {
 			octRequest.setPan(resolveResponse.getRecipientPrimaryAccountNumber());
 			octRequest.setAmount(request.getAmount());
 			enrichOctRequest(octRequest);
+			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
+			JSONObject object = (JSONObject) JSONValue.parse(response);
+			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
 			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
-					.entity(executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST)).build();
+					.entity(response).build();
 		} catch (Exception ex) {
 			status.setMessage("Internal Server Error");
 			return Response.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).type(MediaType.APPLICATION_JSON)
