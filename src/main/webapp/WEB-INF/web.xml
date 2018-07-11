@@ -6,7 +6,7 @@
 
 	<context-param>
 		<param-name>resteasy.resources</param-name>
-		<param-value>com.merchant.rest.controller.JSONService</param-value>
+		<param-value>com.merchant.rest.controller.MerchantService</param-value>
 	</context-param>
 
 	<listener>
