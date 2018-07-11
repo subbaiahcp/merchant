@@ -1,1 +1,1 @@
-war:deploy target/merchant-enablement.war
+java -jar target/dependency/webapp-runner.jar target/*.war
