@@ -111,7 +111,7 @@ public class MerchantService {
 			octRequest.setAmount(request.getAmount());
 			enrichOctRequest(octRequest);
 			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
-			this.visaAPIClient.doGooglePostNotification("", getGoogleNotifyMessage(octRequest.getAmount(),request.getName()),MethodTypes.GET);
+			this.visaAPIClient.doGooglePostNotification("", getGoogleNotifyMessage(octRequest.getAmount()),MethodTypes.GET);
 			JSONObject object = (JSONObject) JSONValue.parse(response);
 			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
 			transcationIdNameMap.put(object.get("transactionIdentifier").toString(), request.getName());
@@ -184,11 +184,11 @@ public class MerchantService {
 		}
 	}
 
-	public String getGoogleNotifyMessage(String amount,String name) {
+	public String getGoogleNotifyMessage(String amount) {
 		String message ="{ \"to\" : \"/topics/payments\", "
 				+ "\"notification\" : "
-				+ "{ \"body\" : \"Recieved $"+amount
-				+ " from "+name+"\",\"title\" : \"Doogle Biz\"}}";
+				+ "{ \"body\" : \"Payment Recieved $"+amount
+				+ "\",\"title\" : \"Doogle Biz\"}}";
 		return message;
 	}
 	public void enrichOctRequest(Request request) {
