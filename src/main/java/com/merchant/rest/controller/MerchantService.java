@@ -187,8 +187,8 @@ public class MerchantService {
 	public String getGoogleNotifyMessage(String amount) {
 		String message ="{ \"to\" : \"/topics/payments\", "
 				+ "\"notification\" : "
-				+ "{ \"body\" : \"Payment Recieved $\","+amount
-				+ "\"title\" : \"Doogle Biz\"}}";
+				+ "{ \"body\" : \"Payment Recieved $"+amount
+				+ "\",\"title\" : \"Doogle Biz\"}}";
 		return message;
 	}
 	public void enrichOctRequest(Request request) {
