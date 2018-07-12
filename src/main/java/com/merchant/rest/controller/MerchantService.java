@@ -111,11 +111,14 @@ public class MerchantService {
 			octRequest.setAmount(request.getAmount());
 			enrichOctRequest(octRequest);
 			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
+			this.visaAPIClient.doGooglePostNotification("", getGoogleNotifyMessage(octRequest.getAmount()),MethodTypes.GET);
 			JSONObject object = (JSONObject) JSONValue.parse(response);
 			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
 			transcationIdNameMap.put(object.get("transactionIdentifier").toString(), request.getName());
-			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
+			Response finalResponse = Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
 					.entity(response).build();
+			
+			return finalResponse;
 		} catch (Exception ex) {
 			status.setMessage("Internal Server Error");
 			return Response.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).type(MediaType.APPLICATION_JSON)
@@ -181,6 +184,13 @@ public class MerchantService {
 		}
 	}
 
+	public String getGoogleNotifyMessage(String amount) {
+		String message ="{ \"to\" : \"/topics/payments\", "
+				+ "\"notification\" : "
+				+ "{ \"body\" : \"Payment Recieved $\","+amount
+				+ "\"title\" : \"Doogle Biz\"}}";
+		return message;
+	}
 	public void enrichOctRequest(Request request) {
 		this.visaAPIClient = new VisaAPIClient();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
