@@ -31,14 +31,14 @@ import com.merchant.rest.model.ResolveResponse;
 import com.merchant.rest.model.Status;
 import com.merchant.rest.model.TransactionQuery;
 import com.merchant.rest.model.User;
+import com.merchant.rest.model.UserLoginResponse;
 import com.merchant.rest.service.MethodTypes;
 import com.merchant.rest.service.VisaAPIClient;
 import com.merchant.rest.utils.Constants;
 
-
 /**
-*@author subbaiah
-*/
+ * @author subbaiah
+ */
 @Path("/merchant")
 public class MerchantService {
 
@@ -47,7 +47,7 @@ public class MerchantService {
 	private Status status = new Status();
 	private ObjectMapper mapper = new ObjectMapper();
 	private static List<String> transcationIdentifiers = new ArrayList<String>();
-	private static Map<String,String> transcationIdNameMap = new HashMap<String,String>();
+	private static Map<String, String> transcationIdNameMap = new HashMap<String, String>();
 
 	@POST
 	@Path("/oct")
@@ -55,7 +55,8 @@ public class MerchantService {
 	public Response postMerchantApi(Request request) {
 		try {
 			enrichOctRequest(request);
-			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
+			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/",
+					MethodTypes.POST);
 			JSONObject object = (JSONObject) JSONValue.parse(response);
 			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
 			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON).entity(response).build();
@@ -104,20 +105,22 @@ public class MerchantService {
 			ResolveRequest resolveRequest = new ResolveRequest();
 			resolveRequest.setAlias(request.getAlias());
 			enrichResolveRequest(resolveRequest);
-			ResolveResponse resolveResponse = mapper.readValue(executeService("visaaliasdirectory/", "v1/resolve/", MethodTypes.POST),
-					ResolveResponse.class);
+			ResolveResponse resolveResponse = mapper.readValue(
+					executeService("visaaliasdirectory/", "v1/resolve/", MethodTypes.POST), ResolveResponse.class);
 			Request octRequest = new Request();
 			octRequest.setPan(resolveResponse.getRecipientPrimaryAccountNumber());
 			octRequest.setAmount(request.getAmount());
 			enrichOctRequest(octRequest);
-			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/", MethodTypes.POST);
-			this.visaAPIClient.doGooglePostNotification("", getGoogleNotifyMessage(octRequest.getAmount()),MethodTypes.GET);
+			String response = executeService("visadirect/", "fundstransfer/v1/pushfundstransactions/",
+					MethodTypes.POST);
+			this.visaAPIClient.doGooglePostNotification("", getGoogleNotifyMessage(octRequest.getAmount()),
+					MethodTypes.GET);
 			JSONObject object = (JSONObject) JSONValue.parse(response);
 			transcationIdentifiers.add(object.get("transactionIdentifier").toString());
 			transcationIdNameMap.put(object.get("transactionIdentifier").toString(), request.getName());
 			Response finalResponse = Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
 					.entity(response).build();
-			
+
 			return finalResponse;
 		} catch (Exception ex) {
 			status.setMessage("Internal Server Error");
@@ -135,16 +138,16 @@ public class MerchantService {
 			for (String transcationIdentifier : transcationIdentifiers) {
 				this.visaAPIClient = new VisaAPIClient();
 				String response = executeService("visadirect/",
-						"v1/transactionquery?acquiringBIN=409999&transactionIdentifier=" + transcationIdentifier, MethodTypes.GET);
+						"v1/transactionquery?acquiringBIN=409999&transactionIdentifier=" + transcationIdentifier,
+						MethodTypes.GET);
 				JSONArray jsonArray = new JSONArray(response);
 				TransactionQuery transactionQ = new TransactionQuery();
-				for(int i=0;i<jsonArray.length();i++)
-	            {
-	                org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
-	                transactionQ.setTransactionIdentifier(jsonObject.optString("transactionIdentifier"));
-	                transactionQ.setAmount(jsonObject.optString("amount"));
-	                transactionQ.setName(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()));
-	            }
+				for (int i = 0; i < jsonArray.length(); i++) {
+					org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
+					transactionQ.setTransactionIdentifier(jsonObject.optString("transactionIdentifier"));
+					transactionQ.setAmount(jsonObject.optString("amount"));
+					transactionQ.setName(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()));
+				}
 				transactionQuery.add(transactionQ);
 			}
 			if (transactionQuery.isEmpty()) {
@@ -167,11 +170,13 @@ public class MerchantService {
 	@Consumes("application/json")
 	public Response checkUser(User user) {
 		try {
-			if (Constants.VALID_USERS.contains(user.getUserName())
+			UserLoginResponse userLoginResponse = new UserLoginResponse();
+			if (Constants.USER_PASS_MAP.keySet().contains(user.getUserName())
 					&& Constants.USER_PASS_MAP.get(user.getUserName()) != null
 					&& StringUtils.equalsIgnoreCase(Constants.USER_PASS_MAP.get(user.getUserName()), user.getPass())) {
-				status.setMessage("success");
-				return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON).entity(status).build();
+				userLoginResponse.setStatus("success");
+				userLoginResponse.setType(Constants.USER_TYPE.get(user.getUserName()));
+				return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON).entity(userLoginResponse).build();
 			} else {
 				status.setMessage("notfound");
 				return Response.status(HttpStatus.NOT_FOUND.value()).type(MediaType.APPLICATION_JSON).entity(status)
@@ -185,12 +190,11 @@ public class MerchantService {
 	}
 
 	public String getGoogleNotifyMessage(String amount) {
-		String message ="{ \"to\" : \"/topics/payments\", "
-				+ "\"notification\" : "
-				+ "{ \"body\" : \"Payment Recieved $"+amount
-				+ "\",\"title\" : \"Doogle Biz\"}}";
+		String message = "{ \"to\" : \"/topics/payments\", " + "\"notification\" : "
+				+ "{ \"body\" : \"Payment Recieved $" + amount + "\",\"title\" : \"Doogle Biz\"}}";
 		return message;
 	}
+
 	public void enrichOctRequest(Request request) {
 		this.visaAPIClient = new VisaAPIClient();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -238,7 +242,7 @@ public class MerchantService {
 		this.request = mapper.writeValueAsString(request);
 	}
 
-	public String executeService(String baseUri, String resourcePath,MethodTypes methodTypes) throws Exception {
+	public String executeService(String baseUri, String resourcePath, MethodTypes methodTypes) throws Exception {
 		return this.visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, "performing API call", this.request,
 				methodTypes, new HashMap<String, String>());
 	}
