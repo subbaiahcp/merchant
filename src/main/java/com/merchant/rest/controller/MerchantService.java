@@ -146,7 +146,11 @@ public class MerchantService {
 					org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
 					transactionQ.setTransactionIdentifier(jsonObject.optString("transactionIdentifier"));
 					transactionQ.setAmount(jsonObject.optString("amount"));
-					transactionQ.setName(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()));
+					if(StringUtils.isBlank(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()))){
+						transactionQ.setName(Constants.SUPPLIER);
+					}else{
+					    transactionQ.setName(transcationIdNameMap.get(transactionQ.getTransactionIdentifier()));
+					}
 				}
 				transactionQuery.add(transactionQ);
 			}

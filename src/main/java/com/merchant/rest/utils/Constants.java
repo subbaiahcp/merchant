@@ -7,6 +7,7 @@ import java.util.Map;
  * @author subbaiah
  */
 public class Constants {
+	public static final String SUPPLIER = "Supplier";
 	public static final Map<String, String> USER_PASS_MAP = new HashMap<String, String>() {
 		{
 			put("visas", "visas");
