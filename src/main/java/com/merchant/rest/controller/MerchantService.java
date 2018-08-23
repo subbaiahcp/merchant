@@ -24,16 +24,19 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.merchant.rest.model.CreateAliasRequest;
+import com.merchant.rest.model.RegisterPhoneNumbers;
 import com.merchant.rest.model.Request;
 import com.merchant.rest.model.ResolveAndPayRequest;
 import com.merchant.rest.model.ResolveRequest;
 import com.merchant.rest.model.ResolveResponse;
+import com.merchant.rest.model.SmsToPhoneNumber;
 import com.merchant.rest.model.Status;
 import com.merchant.rest.model.TransactionQuery;
 import com.merchant.rest.model.User;
 import com.merchant.rest.model.UserLoginResponse;
 import com.merchant.rest.service.MethodTypes;
 import com.merchant.rest.service.VisaAPIClient;
+import com.merchant.rest.utils.AmazonSNSMulti;
 import com.merchant.rest.utils.Constants;
 
 /**
@@ -90,6 +93,34 @@ public class MerchantService {
 			enrichResolveRequest(request);
 			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON)
 					.entity(executeService("visaaliasdirectory/", "v1/resolve/", MethodTypes.POST)).build();
+		} catch (Exception ex) {
+			status.setMessage("Internal Server Error");
+			return Response.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).type(MediaType.APPLICATION_JSON)
+					.entity(status).build();
+		}
+	}
+	
+	@POST
+	@Path("/register/sms")
+	@Consumes("application/json")
+	public Response registerSmsService(RegisterPhoneNumbers request) {
+		try {
+			AmazonSNSMulti.registerPhoneNumbers(request);
+			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON).build();
+		} catch (Exception ex) {
+			status.setMessage("Internal Server Error");
+			return Response.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).type(MediaType.APPLICATION_JSON)
+					.entity(status).build();
+		}
+	}
+
+	@POST
+	@Path("/send/sms")
+	@Consumes("application/json")
+	public Response sendSmsService(SmsToPhoneNumber smsToPhoneNumbers) {
+		try {
+			AmazonSNSMulti.sendSMSMessage(smsToPhoneNumbers.getTo());
+			return Response.status(HttpStatus.OK.value()).type(MediaType.APPLICATION_JSON).build();
 		} catch (Exception ex) {
 			status.setMessage("Internal Server Error");
 			return Response.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).type(MediaType.APPLICATION_JSON)
