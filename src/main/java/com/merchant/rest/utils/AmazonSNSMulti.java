@@ -74,8 +74,8 @@ public class AmazonSNSMulti {
 
 	// Send SMS to a Phone Number
 	public static void sendSMSMessage(String phoneNumber) {
-		String ACCESS_KEY = "AKIAIJSVLSSHLHS4LPOA";
-		String SECRET_KEY = "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";
+		String ACCESS_KEY = "AKIAIGA7V5SCSQZUL7QA";
+		String SECRET_KEY = "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";
 		Map<String, MessageAttributeValue> smsAttributes =
 		        new HashMap<String, MessageAttributeValue>();
 		smsAttributes.put("AWS.SNS.SMS.SenderID", new MessageAttributeValue()
