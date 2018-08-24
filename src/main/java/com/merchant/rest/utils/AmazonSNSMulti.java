@@ -8,12 +8,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.merchant.rest.model.RegisterPhoneNumbers;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.model.*;
 
 public class AmazonSNSMulti {
 	
@@ -74,8 +73,8 @@ public class AmazonSNSMulti {
 
 	// Send SMS to a Phone Number
 	public static void sendSMSMessage(String phoneNumber) {
-		String ACCESS_KEY = "AKIAIGA7V5SCSQZUL7QA";
-		String SECRET_KEY = "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";
+		//String ACCESS_KEY = "AKIAI7T3BP2ZQPZIM32Q";
+		//String SECRET_KEY = "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";
 		Map<String, MessageAttributeValue> smsAttributes =
 		        new HashMap<String, MessageAttributeValue>();
 		smsAttributes.put("AWS.SNS.SMS.SenderID", new MessageAttributeValue()
